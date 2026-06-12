@@ -53,11 +53,23 @@ describe('calculateGroupTables', () => {
       expect.objectContaining({
         team: canada,
         played: 1,
+        won: 0,
+        drawn: 1,
+        lost: 0,
+        goalsFor: 1,
+        goalsAgainst: 1,
+        goalDifference: 0,
         points: 1,
       }),
       expect.objectContaining({
         team: southAfrica,
         played: 1,
+        won: 0,
+        drawn: 0,
+        lost: 1,
+        goalsFor: 0,
+        goalsAgainst: 2,
+        goalDifference: -2,
         points: 0,
       }),
     ]);
