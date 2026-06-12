@@ -50,6 +50,7 @@ function getRoundBandClasses(stage: Stage) {
 }
 
 function getMatchGridClasses(stage: Stage) {
+  if (stage === 'third-place' || stage === 'final') return 'grid gap-4';
   if (stage === 'quarter-final') return 'grid gap-4 lg:grid-cols-2';
   if (stage === 'semi-final') return 'grid gap-4 lg:grid-cols-2';
   return 'grid gap-4 lg:grid-cols-2';

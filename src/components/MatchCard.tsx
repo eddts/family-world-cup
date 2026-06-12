@@ -44,8 +44,7 @@ export function MatchCard({ match, className, emphasis = 'standard' }: MatchCard
   return (
     <article
       className={cn(
-        'border-4 border-ink p-3 text-ink shadow-hard sm:p-4',
-        emphasis === 'final' ? 'bg-posterYellow' : 'bg-white',
+        'border-4 border-ink bg-white p-3 text-ink shadow-hard sm:p-4',
         className,
       )}
     >

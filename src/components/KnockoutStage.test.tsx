@@ -40,6 +40,17 @@ describe('KnockoutStage', () => {
         .getByTestId('final-weekend')
         .querySelector('[class*="xl:grid-cols"]'),
     ).not.toBeInTheDocument();
+    expect(
+      screen.getByTestId('final-weekend').querySelector('.lg\\:grid-cols-2'),
+    ).not.toBeInTheDocument();
+
+    const finalWeekendCards = screen
+      .getByTestId('final-weekend')
+      .querySelectorAll('article');
+    expect(finalWeekendCards[finalWeekendCards.length - 1]).toHaveClass('bg-white');
+    expect(finalWeekendCards[finalWeekendCards.length - 1]).not.toHaveClass(
+      'bg-posterYellow',
+    );
 
     const headings = screen.getAllByRole('heading', { level: 3 });
     expect(headings.map((heading) => heading.textContent)).toEqual([
