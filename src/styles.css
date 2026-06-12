@@ -12,10 +12,29 @@
     min-height: 100%;
     margin: 0;
     background:
-      linear-gradient(135deg, rgba(239, 51, 64, 0.12) 0 18%, transparent 18%),
-      linear-gradient(45deg, rgba(0, 87, 184, 0.12) 0 14%, transparent 14%),
+      linear-gradient(135deg, rgba(239, 51, 64, 0.18) 0 14%, transparent 14% 100%),
+      linear-gradient(45deg, transparent 0 66%, rgba(0, 159, 77, 0.2) 66% 78%, rgba(255, 216, 0, 0.26) 78% 100%),
+      repeating-linear-gradient(90deg, rgba(0, 87, 184, 0.08) 0 24px, transparent 24px 48px),
       #fff7df;
     color: #111111;
     font-family: Inter, Arial, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: wait;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }
