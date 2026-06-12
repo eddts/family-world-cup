@@ -181,6 +181,70 @@ describe('normalizeEspnScoreboard', () => {
     expect(matches[0].awayTeam.owner).toBeUndefined();
   });
 
+  it('treats whitespace-only team names as placeholders', () => {
+    const matches = normalizeEspnScoreboard({
+      events: [
+        {
+          id: 'blank-team-names',
+          date: '2026-06-11T19:00Z',
+          season: { slug: 'group-stage' },
+          competitions: [
+            {
+              altGameNote: 'FIFA World Cup, Group A',
+              competitors: [
+                {
+                  homeAway: 'home',
+                  team: {
+                    id: 'blank-home',
+                    displayName: '   ',
+                    isActive: true,
+                  },
+                },
+                {
+                  homeAway: 'away',
+                  team: {
+                    id: 'blank-away',
+                    shortDisplayName: '\t\n',
+                    isActive: true,
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(matches[0].homeTeam.name).toBe('Unknown Team');
+    expect(matches[0].homeTeam.placeholder).toBe(true);
+    expect(matches[0].homeTeam.owner).toBeUndefined();
+    expect(matches[0].awayTeam.name).toBe('Unknown Team');
+    expect(matches[0].awayTeam.placeholder).toBe(true);
+    expect(matches[0].awayTeam.owner).toBeUndefined();
+  });
+
+  it('uses distinct placeholder ids when both sides have no team identity', () => {
+    const matches = normalizeEspnScoreboard({
+      events: [
+        {
+          id: 'missing-both-team-ids',
+          date: '2026-06-11T19:00Z',
+          season: { slug: 'group-stage' },
+          competitions: [
+            {
+              altGameNote: 'FIFA World Cup, Group A',
+              competitors: [{ homeAway: 'home' }, { homeAway: 'away' }],
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(matches[0].homeTeam.id).toBe('missing-both-team-ids:home:placeholder');
+    expect(matches[0].awayTeam.id).toBe('missing-both-team-ids:away:placeholder');
+    expect(matches[0].homeTeam.id).not.toBe(matches[0].awayTeam.id);
+  });
+
   it('skips events with unknown stages', () => {
     const matches = normalizeEspnScoreboard({
       events: [

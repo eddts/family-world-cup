@@ -22,7 +22,8 @@ function getString(record: Record<string, unknown> | undefined, key: string) {
 
 function getNonEmptyString(record: Record<string, unknown> | undefined, key: string) {
   const value = getString(record, key);
-  return value ? value : undefined;
+  const trimmedValue = value?.trim();
+  return trimmedValue ? trimmedValue : undefined;
 }
 
 function getBoolean(record: Record<string, unknown> | undefined, key: string) {
@@ -79,21 +80,24 @@ function parseScore(value: unknown, status: MatchStatus) {
   return Number.isNaN(score) ? undefined : score;
 }
 
-function unknownTeam(id?: string): TeamRef {
+function unknownTeam(id: string | undefined, fallbackId: string): TeamRef {
   return {
-    id: id ?? 'Unknown Team',
+    id: id ?? fallbackId,
     name: 'Unknown Team',
     placeholder: true,
   };
 }
 
-function normalizeTeam(competitor: Record<string, unknown> | undefined): TeamRef {
+function normalizeTeam(
+  competitor: Record<string, unknown> | undefined,
+  fallbackId: string,
+): TeamRef {
   const team = getRecord(competitor, 'team');
-  const id = getString(team, 'id');
+  const id = getNonEmptyString(team, 'id');
   const name = getNonEmptyString(team, 'displayName') ?? getNonEmptyString(team, 'shortDisplayName');
 
   if (!team || !name) {
-    return unknownTeam(id);
+    return unknownTeam(id, fallbackId);
   }
 
   const placeholder = getBoolean(team, 'isActive') === false;
@@ -172,8 +176,8 @@ export function normalizeEspnScoreboard(payload: unknown): Match[] {
         venue: getString(venue, 'fullName') ?? getString(venue, 'displayName'),
         homeScore: parseScore(home.score, status),
         awayScore: parseScore(away.score, status),
-        homeTeam: normalizeTeam(home),
-        awayTeam: normalizeTeam(away),
+        homeTeam: normalizeTeam(home, `${id}:home:placeholder`),
+        awayTeam: normalizeTeam(away, `${id}:away:placeholder`),
       };
     })
     .filter((match): match is Match => Boolean(match))
