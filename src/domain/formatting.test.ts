@@ -66,8 +66,13 @@ describe('getMatchScore', () => {
     expect(getMatchScore(match())).toBe('20:00');
   });
 
-  it('returns scoreline for active matches and defaults missing scores to zero', () => {
-    expect(getMatchScore(match({ status: 'live', homeScore: 2 }))).toBe('2-0');
+  it('returns scoreline for active matches when both scores are available', () => {
+    expect(getMatchScore(match({ status: 'live', homeScore: 0, awayScore: 2 }))).toBe('0-2');
+  });
+
+  it('does not invent scores when ESPN omits part of a live or finished scoreline', () => {
+    expect(getMatchScore(match({ status: 'live', homeScore: 2 }))).toBe('-');
+    expect(getMatchScore(match({ status: 'finished', awayScore: 1 }))).toBe('-');
   });
 });
 

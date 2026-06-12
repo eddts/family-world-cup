@@ -42,7 +42,11 @@ export function getMatchScore(match: Match) {
     return formatKickoffTime(match.kickoff);
   }
 
-  return `${match.homeScore ?? 0}-${match.awayScore ?? 0}`;
+  if (typeof match.homeScore !== 'number' || typeof match.awayScore !== 'number') {
+    return '-';
+  }
+
+  return `${match.homeScore}-${match.awayScore}`;
 }
 
 export function getStatusLabel(match: Match) {

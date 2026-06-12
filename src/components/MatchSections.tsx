@@ -19,7 +19,9 @@ export function MatchSections({
   emptyMessage = 'No matches to show yet.',
   className,
 }: MatchSectionsProps) {
-  const groupedMatches = groupMatchesByDate(matches);
+  const groupedMatches = groupMatchesByDate(
+    [...matches].sort((left, right) => Date.parse(left.kickoff) - Date.parse(right.kickoff)),
+  );
 
   return (
     <section className={classNames('text-ink', className)}>

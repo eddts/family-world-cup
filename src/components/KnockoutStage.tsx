@@ -25,7 +25,7 @@ function classNames(...values: Array<string | false | undefined>) {
 function getMatchesForStage(matches: readonly Match[], stage: Stage) {
   return matches
     .filter((match) => match.stage === stage)
-    .sort((left, right) => left.kickoff.localeCompare(right.kickoff));
+    .sort((left, right) => Date.parse(left.kickoff) - Date.parse(right.kickoff));
 }
 
 export function KnockoutStage({
