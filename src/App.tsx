@@ -32,7 +32,11 @@ export default function App() {
 
         <MatchSections title="Upcoming Matches" matches={partitions.upcoming.slice(0, 18)} />
 
-        <MatchSections title="Historic Scores" matches={partitions.results.slice(0, 18)} />
+        <MatchSections
+          title="Historic Scores"
+          matches={partitions.results.slice(0, 18)}
+          sortDirection="desc"
+        />
 
         <section className="space-y-5">
           <div className="flex flex-wrap items-end justify-between gap-3">

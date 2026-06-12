@@ -6,6 +6,7 @@ type MatchSectionsProps = {
   title: string;
   matches: readonly Match[];
   emptyMessage?: string;
+  sortDirection?: 'asc' | 'desc';
   className?: string;
 };
 
@@ -17,10 +18,14 @@ export function MatchSections({
   title,
   matches,
   emptyMessage = 'No matches to show yet.',
+  sortDirection = 'asc',
   className,
 }: MatchSectionsProps) {
   const groupedMatches = groupMatchesByDate(
-    [...matches].sort((left, right) => Date.parse(left.kickoff) - Date.parse(right.kickoff)),
+    [...matches].sort((left, right) => {
+      const comparison = Date.parse(left.kickoff) - Date.parse(right.kickoff);
+      return sortDirection === 'asc' ? comparison : -comparison;
+    }),
   );
 
   return (
