@@ -5,16 +5,13 @@ import {
   getStatusLabel,
 } from '../domain/formatting';
 import type { Match } from '../domain/types';
+import { cn } from '../lib/classNames';
 import { TeamBadge } from './TeamBadge';
 
 type NextMatchHeroProps = {
   match?: Match;
   className?: string;
 };
-
-function classNames(...values: Array<string | false | undefined>) {
-  return values.filter(Boolean).join(' ');
-}
 
 function getMatchLabel(match: Match) {
   if (match.stage === 'group' && match.group) {
@@ -28,7 +25,7 @@ export function NextMatchHero({ match, className }: NextMatchHeroProps) {
   if (!match) {
     return (
       <section
-        className={classNames(
+        className={cn(
           'border-4 border-ink bg-posterBlue p-5 text-white shadow-hard sm:p-8',
           className,
         )}
@@ -45,7 +42,7 @@ export function NextMatchHero({ match, className }: NextMatchHeroProps) {
 
   return (
     <section
-      className={classNames(
+      className={cn(
         'border-4 border-ink bg-posterRed p-5 text-white shadow-hard sm:p-8',
         className,
       )}
@@ -70,6 +67,7 @@ export function NextMatchHero({ match, className }: NextMatchHeroProps) {
           className="items-start sm:items-center"
           markClassName="h-14 w-14 sm:h-12 sm:w-12"
           nameClassName="text-2xl sm:text-4xl"
+          ownerTagSize="hero"
         />
         <div className="justify-self-center border-4 border-ink bg-posterYellow px-5 py-3 text-center font-display text-6xl uppercase leading-none text-ink shadow-hard sm:text-8xl">
           {getMatchScore(match)}
@@ -80,6 +78,7 @@ export function NextMatchHero({ match, className }: NextMatchHeroProps) {
           className="items-start justify-end sm:items-center"
           markClassName="h-14 w-14 sm:h-12 sm:w-12"
           nameClassName="text-2xl sm:text-4xl"
+          ownerTagSize="hero"
         />
       </div>
 

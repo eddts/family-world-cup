@@ -1,5 +1,6 @@
 import { getStageLabel } from '../domain/formatting';
 import type { Match, Stage } from '../domain/types';
+import { cn } from '../lib/classNames';
 import { MatchCard } from './MatchCard';
 
 type KnockoutStageProps = {
@@ -18,14 +19,40 @@ const knockoutStages: Stage[] = [
   'final',
 ];
 
-function classNames(...values: Array<string | false | undefined>) {
-  return values.filter(Boolean).join(' ');
-}
-
 function getMatchesForStage(matches: readonly Match[], stage: Stage) {
   return matches
     .filter((match) => match.stage === stage)
     .sort((left, right) => Date.parse(left.kickoff) - Date.parse(right.kickoff));
+}
+
+function getRoundClasses(stage: Stage) {
+  if (stage === 'final') {
+    return 'border-4 border-ink bg-posterRed p-4 text-white shadow-hard lg:col-span-2 2xl:col-span-3';
+  }
+
+  if (stage === 'semi-final' || stage === 'third-place') {
+    return 'border-4 border-ink bg-posterBlue p-4 text-white shadow-hard';
+  }
+
+  return 'min-w-0';
+}
+
+function getHeadingClasses(stage: Stage) {
+  if (stage === 'final') {
+    return 'mb-5 inline-flex border-4 border-ink bg-posterYellow px-4 py-3 font-display text-4xl uppercase leading-none text-ink shadow-hardSm sm:text-5xl';
+  }
+
+  if (stage === 'semi-final' || stage === 'third-place') {
+    return 'mb-4 inline-flex border-4 border-ink bg-white px-3 py-2 font-display text-3xl uppercase leading-none text-ink shadow-hardSm';
+  }
+
+  return 'mb-4 inline-flex border-4 border-ink bg-posterYellow px-3 py-2 font-display text-2xl uppercase leading-none text-ink shadow-hardSm';
+}
+
+function getMatchEmphasis(stage: Stage) {
+  if (stage === 'final') return 'final';
+  if (stage !== 'round-of-32' && stage !== 'round-of-16') return 'knockout';
+  return 'standard';
 }
 
 export function KnockoutStage({
@@ -37,7 +64,7 @@ export function KnockoutStage({
   const knockoutMatches = matches.filter((match) => match.stage !== 'group');
 
   return (
-    <section className={classNames('text-ink', className)}>
+    <section className={cn('text-ink', className)}>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <h2 className="font-display text-4xl uppercase leading-none sm:text-5xl">
           {title}
@@ -57,14 +84,18 @@ export function KnockoutStage({
             const stageMatches = getMatchesForStage(matches, stage);
 
             return (
-              <div key={stage} className="min-w-0">
-                <h3 className="mb-4 inline-flex border-4 border-ink bg-posterYellow px-3 py-2 font-display text-2xl uppercase leading-none shadow-hardSm">
+              <div key={stage} className={getRoundClasses(stage)}>
+                <h3 className={getHeadingClasses(stage)}>
                   {getStageLabel(stage)}
                 </h3>
                 {stageMatches.length > 0 ? (
                   <div className="space-y-4">
                     {stageMatches.map((match) => (
-                      <MatchCard key={match.id} match={match} />
+                      <MatchCard
+                        key={match.id}
+                        match={match}
+                        emphasis={getMatchEmphasis(stage)}
+                      />
                     ))}
                   </div>
                 ) : (

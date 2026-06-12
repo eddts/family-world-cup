@@ -1,4 +1,5 @@
 import type { TeamRef } from '../domain/types';
+import { cn } from '../lib/classNames';
 import { OwnerTag } from './OwnerTag';
 
 type TeamBadgeProps = {
@@ -7,11 +8,8 @@ type TeamBadgeProps = {
   className?: string;
   markClassName?: string;
   nameClassName?: string;
+  ownerTagSize?: 'default' | 'hero';
 };
-
-function classNames(...values: Array<string | false | undefined>) {
-  return values.filter(Boolean).join(' ');
-}
 
 function getInitials(team: TeamRef) {
   if (team.abbreviation?.trim()) {
@@ -33,20 +31,21 @@ export function TeamBadge({
   className,
   markClassName,
   nameClassName,
+  ownerTagSize = 'default',
 }: TeamBadgeProps) {
   const isRightAligned = align === 'right';
   const initials = getInitials(team);
 
   return (
     <div
-      className={classNames(
+      className={cn(
         'flex min-w-0 items-center gap-3',
         isRightAligned && 'flex-row-reverse text-right',
         className,
       )}
     >
       <div
-        className={classNames(
+        className={cn(
           'flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden border-4 border-ink bg-white shadow-hardSm',
           markClassName,
         )}
@@ -66,13 +65,13 @@ export function TeamBadge({
       </div>
 
       <div
-        className={classNames(
+        className={cn(
           'flex min-w-0 flex-1 flex-col',
           isRightAligned && 'items-end',
         )}
       >
         <span
-          className={classNames(
+          className={cn(
             'max-w-full truncate font-display text-xl uppercase leading-none text-ink',
             nameClassName,
           )}
@@ -81,7 +80,11 @@ export function TeamBadge({
           {team.name}
         </span>
         {!team.placeholder && (
-          <OwnerTag owner={team.owner} className="mt-2 max-w-full" />
+          <OwnerTag
+            owner={team.owner}
+            size={ownerTagSize}
+            className={cn('mt-2 max-w-full', isRightAligned ? 'self-end' : 'self-start')}
+          />
         )}
       </div>
     </div>

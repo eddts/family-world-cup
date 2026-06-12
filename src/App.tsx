@@ -18,9 +18,6 @@ export default function App() {
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-6 sm:px-6 lg:py-8">
         <header className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)] lg:items-end">
           <div className="min-w-0">
-            <p className="mb-3 inline-block border-4 border-ink bg-posterGreen px-3 py-2 font-display text-xl uppercase leading-none text-white shadow-hardSm">
-              Public family sweepstake
-            </p>
             <h1 className="max-w-5xl font-display text-6xl uppercase leading-none sm:text-7xl lg:text-8xl">
               Family World Cup 2026
             </h1>

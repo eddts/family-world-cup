@@ -5,16 +5,14 @@ import {
   getStatusLabel,
 } from '../domain/formatting';
 import type { Match } from '../domain/types';
+import { cn } from '../lib/classNames';
 import { TeamBadge } from './TeamBadge';
 
 type MatchCardProps = {
   match: Match;
   className?: string;
+  emphasis?: 'standard' | 'knockout' | 'final';
 };
-
-function classNames(...values: Array<string | false | undefined>) {
-  return values.filter(Boolean).join(' ');
-}
 
 function getMatchLabel(match: Match) {
   if (match.stage === 'group' && match.group) {
@@ -30,11 +28,24 @@ function getStatusClasses(match: Match) {
   return 'bg-posterBlue text-white';
 }
 
-export function MatchCard({ match, className }: MatchCardProps) {
+function getScoreClasses(emphasis: MatchCardProps['emphasis']) {
+  if (emphasis === 'final') {
+    return 'min-w-[6.75rem] bg-white px-4 py-3 text-5xl text-posterRed sm:min-w-[8rem] sm:text-6xl';
+  }
+
+  if (emphasis === 'knockout') {
+    return 'min-w-[5.5rem] bg-posterYellow px-3 py-2 text-4xl sm:min-w-[6.5rem] sm:text-5xl';
+  }
+
+  return 'min-w-[4rem] bg-posterYellow px-2 py-2 text-3xl sm:min-w-[5rem] sm:text-4xl';
+}
+
+export function MatchCard({ match, className, emphasis = 'standard' }: MatchCardProps) {
   return (
     <article
-      className={classNames(
-        'border-4 border-ink bg-white p-3 text-ink shadow-hard sm:p-4',
+      className={cn(
+        'border-4 border-ink p-3 text-ink shadow-hard sm:p-4',
+        emphasis === 'final' ? 'bg-posterYellow' : 'bg-white',
         className,
       )}
     >
@@ -49,7 +60,7 @@ export function MatchCard({ match, className }: MatchCardProps) {
         </div>
 
         <span
-          className={classNames(
+          className={cn(
             'border-2 border-ink px-2 py-1 font-display text-sm uppercase leading-none shadow-hardSm',
             getStatusClasses(match),
           )}
@@ -60,7 +71,12 @@ export function MatchCard({ match, className }: MatchCardProps) {
 
       <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 sm:gap-4">
         <TeamBadge team={match.homeTeam} />
-        <div className="min-w-[4rem] border-4 border-ink bg-posterYellow px-2 py-2 text-center font-display text-3xl uppercase leading-none text-ink shadow-hardSm sm:min-w-[5rem] sm:text-4xl">
+        <div
+          className={cn(
+            'border-4 border-ink text-center font-display uppercase leading-none shadow-hardSm',
+            getScoreClasses(emphasis),
+          )}
+        >
           {getMatchScore(match)}
         </div>
         <TeamBadge team={match.awayTeam} align="right" />

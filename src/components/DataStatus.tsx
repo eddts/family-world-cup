@@ -1,15 +1,13 @@
 import { formatKickoff } from '../domain/formatting';
 import type { DataSourceState } from '../domain/types';
+import { cn } from '../lib/classNames';
+import { Button } from './Button';
 
 type DataStatusProps = {
   state: DataSourceState;
   onRefresh: () => void | Promise<void>;
   className?: string;
 };
-
-function classNames(...values: Array<string | false | undefined>) {
-  return values.filter(Boolean).join(' ');
-}
 
 function getSourceLabel(source: DataSourceState['source']) {
   return source === 'espn' ? 'ESPN live data' : 'Fallback snapshot';
@@ -18,7 +16,7 @@ function getSourceLabel(source: DataSourceState['source']) {
 export function DataStatus({ state, onRefresh, className }: DataStatusProps) {
   return (
     <aside
-      className={classNames(
+      className={cn(
         'border-4 border-ink bg-paper p-4 text-ink shadow-hard',
         className,
       )}
@@ -35,16 +33,14 @@ export function DataStatus({ state, onRefresh, className }: DataStatusProps) {
           </p>
         </div>
 
-        <button
-          type="button"
+        <Button
           onClick={() => {
             void onRefresh();
           }}
           disabled={state.loading}
-          className="inline-flex min-h-[2.75rem] items-center justify-center border-4 border-ink bg-posterGreen px-4 py-2 font-display text-base uppercase leading-none text-white shadow-hardSm transition disabled:cursor-not-allowed disabled:bg-ink/30 disabled:text-ink/60 disabled:shadow-none"
         >
           {state.loading ? 'Loading' : 'Refresh'}
-        </button>
+        </Button>
       </div>
 
       {state.error && (

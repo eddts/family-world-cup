@@ -1,5 +1,6 @@
 import { groupMatchesByDate } from '../domain/tournament';
 import type { Match } from '../domain/types';
+import { cn } from '../lib/classNames';
 import { MatchCard } from './MatchCard';
 
 type MatchSectionsProps = {
@@ -9,10 +10,6 @@ type MatchSectionsProps = {
   sortDirection?: 'asc' | 'desc';
   className?: string;
 };
-
-function classNames(...values: Array<string | false | undefined>) {
-  return values.filter(Boolean).join(' ');
-}
 
 export function MatchSections({
   title,
@@ -29,7 +26,7 @@ export function MatchSections({
   );
 
   return (
-    <section className={classNames('text-ink', className)}>
+    <section className={cn('text-ink', className)}>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <h2 className="font-display text-4xl uppercase leading-none sm:text-5xl">
           {title}

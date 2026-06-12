@@ -1,19 +1,19 @@
+import { cn } from '../lib/classNames';
+
 type OwnerTagProps = {
   owner?: string;
   className?: string;
+  size?: 'default' | 'hero';
 };
 
-function classNames(...values: Array<string | false | undefined>) {
-  return values.filter(Boolean).join(' ');
-}
-
-export function OwnerTag({ owner, className }: OwnerTagProps) {
+export function OwnerTag({ owner, className, size = 'default' }: OwnerTagProps) {
   const label = owner?.trim() || 'Unassigned';
 
   return (
     <span
-      className={classNames(
-        'inline-flex max-w-full items-center border-2 border-ink bg-posterYellow px-2 py-1 font-display text-xs uppercase leading-none text-ink shadow-hardSm',
+      className={cn(
+        'inline-flex w-fit max-w-full items-center border-2 border-ink bg-posterBlue font-display uppercase leading-none text-white shadow-hardSm',
+        size === 'hero' ? 'px-3 py-1.5 text-sm sm:text-base' : 'px-2 py-1 text-xs',
         className,
       )}
       title={label}

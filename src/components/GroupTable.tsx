@@ -1,4 +1,5 @@
 import type { TableRow, TeamRef } from '../domain/types';
+import { cn } from '../lib/classNames';
 import { OwnerTag } from './OwnerTag';
 
 type GroupTableProps = {
@@ -6,10 +7,6 @@ type GroupTableProps = {
   rows: readonly TableRow[];
   className?: string;
 };
-
-function classNames(...values: Array<string | false | undefined>) {
-  return values.filter(Boolean).join(' ');
-}
 
 function getInitials(team: TeamRef) {
   if (team.abbreviation?.trim()) {
@@ -32,7 +29,7 @@ function formatGoalDifference(value: number) {
 export function GroupTable({ group, rows, className }: GroupTableProps) {
   return (
     <section
-      className={classNames(
+      className={cn(
         'overflow-hidden border-4 border-ink bg-white text-ink shadow-hard',
         className,
       )}
