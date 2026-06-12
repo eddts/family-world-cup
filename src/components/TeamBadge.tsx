@@ -5,6 +5,7 @@ type TeamBadgeProps = {
   team: TeamRef;
   align?: 'left' | 'right';
   className?: string;
+  markClassName?: string;
   nameClassName?: string;
 };
 
@@ -30,6 +31,7 @@ export function TeamBadge({
   team,
   align = 'left',
   className,
+  markClassName,
   nameClassName,
 }: TeamBadgeProps) {
   const isRightAligned = align === 'right';
@@ -43,7 +45,12 @@ export function TeamBadge({
         className,
       )}
     >
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden border-4 border-ink bg-white shadow-hardSm">
+      <div
+        className={classNames(
+          'flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden border-4 border-ink bg-white shadow-hardSm',
+          markClassName,
+        )}
+      >
         {team.logo ? (
           <img
             src={team.logo}

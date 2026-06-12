@@ -67,7 +67,9 @@ export function NextMatchHero({ match, className }: NextMatchHeroProps) {
       <div className="mt-8 grid grid-cols-1 items-center gap-5 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
         <TeamBadge
           team={match.homeTeam}
-          nameClassName="text-3xl sm:text-4xl"
+          className="items-start sm:items-center"
+          markClassName="h-14 w-14 sm:h-12 sm:w-12"
+          nameClassName="text-2xl sm:text-4xl"
         />
         <div className="justify-self-center border-4 border-ink bg-posterYellow px-5 py-3 text-center font-display text-6xl uppercase leading-none text-ink shadow-hard sm:text-8xl">
           {getMatchScore(match)}
@@ -75,7 +77,9 @@ export function NextMatchHero({ match, className }: NextMatchHeroProps) {
         <TeamBadge
           team={match.awayTeam}
           align="right"
-          nameClassName="text-3xl sm:text-4xl"
+          className="items-start justify-end sm:items-center"
+          markClassName="h-14 w-14 sm:h-12 sm:w-12"
+          nameClassName="text-2xl sm:text-4xl"
         />
       </div>
 
