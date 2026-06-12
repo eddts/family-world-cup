@@ -11,9 +11,10 @@ export function OwnerTag({ owner, className, size = 'default' }: OwnerTagProps) 
 
   return (
     <span
+      data-testid="owner-tag"
       className={cn(
-        'inline-flex w-fit max-w-full items-center border-2 border-ink bg-posterBlue font-display uppercase leading-none text-white shadow-hardSm',
-        size === 'hero' ? 'px-3 py-1.5 text-sm sm:text-base' : 'px-2 py-1 text-xs',
+        'inline-flex min-w-[4.25rem] max-w-full items-center justify-center border-2 border-ink bg-posterBlue font-body font-semibold uppercase leading-none tracking-wide text-white shadow-hardSm',
+        size === 'hero' ? 'px-4 py-2 text-lg sm:text-xl' : 'px-3 py-1.5 text-[0.9rem]',
         className,
       )}
       title={label}
