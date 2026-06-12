@@ -18,7 +18,7 @@ function match(id: string, stage: Stage): Match {
 
 describe('KnockoutStage', () => {
   it('renders knockout rounds as vertical round bands with final weekend grouped last', () => {
-    render(
+    const { container } = render(
       <KnockoutStage
         matches={[
           match('r32', 'round-of-32'),
@@ -34,6 +34,12 @@ describe('KnockoutStage', () => {
     expect(screen.getByTestId('knockout-round-list')).toHaveClass('space-y-8');
     expect(screen.getByTestId('knockout-round-list')).not.toHaveClass('grid');
     expect(screen.getByTestId('final-weekend')).toBeInTheDocument();
+    expect(container.querySelector('.xl\\:grid-cols-4')).not.toBeInTheDocument();
+    expect(
+      screen
+        .getByTestId('final-weekend')
+        .querySelector('[class*="xl:grid-cols"]'),
+    ).not.toBeInTheDocument();
 
     const headings = screen.getAllByRole('heading', { level: 3 });
     expect(headings.map((heading) => heading.textContent)).toEqual([

@@ -50,7 +50,7 @@ function getRoundBandClasses(stage: Stage) {
 }
 
 function getMatchGridClasses(stage: Stage) {
-  if (stage === 'quarter-final') return 'grid gap-4 lg:grid-cols-2 xl:grid-cols-4';
+  if (stage === 'quarter-final') return 'grid gap-4 lg:grid-cols-2';
   if (stage === 'semi-final') return 'grid gap-4 lg:grid-cols-2';
   return 'grid gap-4 lg:grid-cols-2';
 }
@@ -117,7 +117,7 @@ export function KnockoutStage({
             <h3 className="mb-5 inline-flex border-4 border-ink bg-posterYellow px-4 py-3 font-display text-4xl uppercase leading-none text-ink shadow-hardSm sm:text-5xl">
               Third place / Final
             </h3>
-            <div className="grid gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] xl:items-start">
+            <div className="grid gap-5">
               <div className="border-4 border-ink bg-posterBlue p-4 shadow-hardSm">
                 <h3 className="mb-4 inline-flex border-4 border-ink bg-white px-3 py-2 font-display text-3xl uppercase leading-none text-ink shadow-hardSm">
                   {getStageLabel('third-place')}
