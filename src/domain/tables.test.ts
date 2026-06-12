@@ -15,10 +15,11 @@ const groupMatch = (
   awayTeam: TeamRef,
   homeScore: number,
   awayScore: number,
+  group = 'A',
 ): Match => ({
   id,
   stage: 'group',
-  group: 'A',
+  group,
   kickoff: '2026-06-11T19:00:00Z',
   status: 'finished',
   homeTeam,
@@ -102,5 +103,92 @@ describe('calculateGroupTables', () => {
     ]);
 
     expect(tables).toEqual({});
+  });
+
+  it('ignores finished group matches with invalid score values', () => {
+    const mexico = team('Mexico', 'Nicky');
+    const canada = team('Canada', 'Granny');
+
+    const tables = calculateGroupTables([
+      groupMatch('nan', mexico, canada, Number.NaN, 0),
+      groupMatch('infinity', mexico, canada, 0, Number.POSITIVE_INFINITY),
+      groupMatch('negative', mexico, canada, -1, 0),
+      groupMatch('decimal', mexico, canada, 1, 1.5),
+    ]);
+
+    expect(tables).toEqual({});
+  });
+
+  it('orders tied teams by goal difference', () => {
+    const alpha = team('Alpha', 'Nicky');
+    const bravo = team('Bravo', 'Charlie');
+    const charlie = team('Charlie', 'Granny');
+    const delta = team('Delta', 'Dan');
+
+    const tables = calculateGroupTables([
+      groupMatch('1', alpha, bravo, 2, 0),
+      groupMatch('2', charlie, delta, 1, 0),
+    ]);
+
+    expect(tables.A.map((row) => row.team.name)).toEqual([
+      'Alpha',
+      'Charlie',
+      'Delta',
+      'Bravo',
+    ]);
+  });
+
+  it('orders tied teams by goals for', () => {
+    const alpha = team('Alpha', 'Nicky');
+    const bravo = team('Bravo', 'Charlie');
+    const charlie = team('Charlie', 'Granny');
+    const delta = team('Delta', 'Dan');
+
+    const tables = calculateGroupTables([
+      groupMatch('1', alpha, bravo, 3, 2),
+      groupMatch('2', charlie, delta, 2, 1),
+    ]);
+
+    expect(tables.A.map((row) => row.team.name)).toEqual([
+      'Alpha',
+      'Charlie',
+      'Bravo',
+      'Delta',
+    ]);
+  });
+
+  it('orders fully tied teams by team name', () => {
+    const bravo = team('Bravo', 'Charlie');
+    const delta = team('Delta', 'Dan');
+    const alpha = team('Alpha', 'Nicky');
+    const charlie = team('Charlie', 'Granny');
+
+    const tables = calculateGroupTables([
+      groupMatch('1', bravo, delta, 1, 0),
+      groupMatch('2', alpha, charlie, 1, 0),
+    ]);
+
+    expect(tables.A.map((row) => row.team.name)).toEqual([
+      'Alpha',
+      'Bravo',
+      'Charlie',
+      'Delta',
+    ]);
+  });
+
+  it('returns multiple groups in sorted group-label order', () => {
+    const mexico = team('Mexico', 'Nicky');
+    const canada = team('Canada', 'Granny');
+    const brazil = team('Brazil', 'Charlie');
+    const france = team('France', 'Dan');
+
+    const tables = calculateGroupTables([
+      groupMatch('1', brazil, france, 1, 0, 'B'),
+      groupMatch('2', mexico, canada, 2, 0, 'A'),
+    ]);
+
+    expect(Object.keys(tables)).toEqual(['A', 'B']);
+    expect(tables.A.map((row) => row.team.name)).toEqual(['Mexico', 'Canada']);
+    expect(tables.B.map((row) => row.team.name)).toEqual(['Brazil', 'France']);
   });
 });

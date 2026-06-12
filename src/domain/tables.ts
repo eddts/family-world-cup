@@ -14,6 +14,10 @@ function createRow(team: TeamRef): TableRow {
   };
 }
 
+function isValidScore(score: unknown): score is number {
+  return typeof score === 'number' && Number.isInteger(score) && score >= 0;
+}
+
 function applyResult(row: TableRow, goalsFor: number, goalsAgainst: number) {
   row.played += 1;
   row.goalsFor += goalsFor;
@@ -42,7 +46,9 @@ function sortRows(rows: TableRow[]) {
   });
 }
 
-export function calculateGroupTables(matches: readonly Match[]) {
+export function calculateGroupTables(
+  matches: readonly Match[],
+): Record<string, TableRow[]> {
   const groups = new Map<string, Map<string, TableRow>>();
 
   for (const match of matches) {
@@ -50,8 +56,8 @@ export function calculateGroupTables(matches: readonly Match[]) {
       match.stage !== 'group' ||
       match.status !== 'finished' ||
       !match.group ||
-      typeof match.homeScore !== 'number' ||
-      typeof match.awayScore !== 'number'
+      !isValidScore(match.homeScore) ||
+      !isValidScore(match.awayScore)
     ) {
       continue;
     }
