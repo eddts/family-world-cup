@@ -7,12 +7,20 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: 'Europe/London',
 });
 
+function getKickoffTime(match: Match) {
+  return Date.parse(match.kickoff);
+}
+
+function compareKickoffValues(left: string, right: string) {
+  return Date.parse(left) - Date.parse(right);
+}
+
 function byKickoff(left: Match, right: Match) {
-  return left.kickoff.localeCompare(right.kickoff);
+  return getKickoffTime(left) - getKickoffTime(right);
 }
 
 function byKickoffDesc(left: Match, right: Match) {
-  return right.kickoff.localeCompare(left.kickoff);
+  return getKickoffTime(right) - getKickoffTime(left);
 }
 
 export function getNextFeaturedMatch(matches: readonly Match[], nowIso = new Date().toISOString()) {
@@ -20,7 +28,9 @@ export function getNextFeaturedMatch(matches: readonly Match[], nowIso = new Dat
   if (live) return live;
 
   const upcoming = matches
-    .filter((match) => match.status === 'scheduled' && match.kickoff >= nowIso)
+    .filter(
+      (match) => match.status === 'scheduled' && compareKickoffValues(match.kickoff, nowIso) >= 0,
+    )
     .sort(byKickoff)[0];
   if (upcoming) return upcoming;
 

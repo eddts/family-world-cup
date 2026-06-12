@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import fallbackEspnScoreboard from '../data/fallbackEspnScoreboard.json';
 import { getUnmatchedAssignments } from '../domain/owners';
 import { calculateGroupTables } from '../domain/tables';
@@ -22,13 +22,21 @@ export function useTournamentData() {
   const [state, setState] = useState<DataSourceState>(() =>
     buildState(fallbackMatches, { source: 'fallback' }),
   );
+  const activeControllerRef = useRef<AbortController | undefined>(undefined);
+  const requestIdRef = useRef(0);
 
-  const load = useCallback(async (signal?: AbortSignal) => {
+  const refresh = useCallback(async () => {
+    activeControllerRef.current?.abort();
+    const controller = new AbortController();
+    activeControllerRef.current = controller;
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
+
     setState((current) => ({ ...current, loading: true, error: undefined }));
 
     try {
-      const espnMatches = await fetchEspnMatches(fetch, signal ? { signal } : undefined);
-      if (signal?.aborted) return;
+      const espnMatches = await fetchEspnMatches(fetch, { signal: controller.signal });
+      if (controller.signal.aborted || requestId !== requestIdRef.current) return;
 
       setMatches(espnMatches);
       setState(
@@ -39,7 +47,7 @@ export function useTournamentData() {
         }),
       );
     } catch (error) {
-      if (signal?.aborted) return;
+      if (controller.signal.aborted || requestId !== requestIdRef.current) return;
 
       setMatches(fallbackMatches);
       setState(
@@ -52,16 +60,14 @@ export function useTournamentData() {
     }
   }, []);
 
-  const refresh = useCallback(() => load(), [load]);
-
   useEffect(() => {
-    const controller = new AbortController();
-    void load(controller.signal);
+    void refresh();
 
     return () => {
-      controller.abort();
+      requestIdRef.current += 1;
+      activeControllerRef.current?.abort();
     };
-  }, [load]);
+  }, [refresh]);
 
   const tables = useMemo(() => calculateGroupTables(matches), [matches]);
 

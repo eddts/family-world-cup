@@ -27,6 +27,15 @@ describe('tournament helpers', () => {
     expect(getNextFeaturedMatch([scheduled, live], '2026-06-12T18:00:00Z')).toBe(live);
   });
 
+  it('compares kickoff timestamps by time rather than ISO string shape', () => {
+    const recentlyStarted = match('started', '2026-06-12T19:00Z', 'scheduled');
+    const later = match('later', '2026-06-12T20:00:00.000Z', 'scheduled');
+
+    expect(getNextFeaturedMatch([recentlyStarted, later], '2026-06-12T19:00:30.000Z')).toBe(
+      later,
+    );
+  });
+
   it('falls back to the latest finished match when no future match exists', () => {
     const old = match('old', '2026-06-11T19:00:00Z', 'finished');
     const latest = match('latest', '2026-06-12T19:00:00Z', 'finished');
@@ -56,15 +65,20 @@ describe('tournament helpers', () => {
     expect(grouped[0].label).toContain('Friday');
   });
 
-  it('returns active loaded team names only', () => {
+  it('returns sorted unique active loaded team names only', () => {
     const names = getLoadedTeamNames([
       {
         ...match('one', '2026-06-12T19:00:00Z', 'scheduled'),
+        homeTeam: team('Mexico'),
+        awayTeam: team('Canada'),
+      },
+      {
+        ...match('two', '2026-06-13T19:00:00Z', 'scheduled'),
         homeTeam: team('Mexico'),
         awayTeam: { id: 'placeholder', name: 'Group A Winner', placeholder: true },
       },
     ]);
 
-    expect(names).toEqual(['Mexico']);
+    expect(names).toEqual(['Canada', 'Mexico']);
   });
 });
