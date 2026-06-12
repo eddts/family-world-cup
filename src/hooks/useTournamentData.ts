@@ -37,6 +37,9 @@ export function useTournamentData() {
     try {
       const espnMatches = await fetchEspnMatches(fetch, { signal: controller.signal });
       if (controller.signal.aborted || requestId !== requestIdRef.current) return;
+      if (espnMatches.length === 0) {
+        throw new Error('ESPN returned no matches');
+      }
 
       setMatches(espnMatches);
       setState(

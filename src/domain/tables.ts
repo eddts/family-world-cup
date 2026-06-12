@@ -46,38 +46,48 @@ function sortRows(rows: TableRow[]) {
   });
 }
 
+function ensureGroup(groups: Map<string, Map<string, TableRow>>, groupName: string) {
+  if (!groups.has(groupName)) {
+    groups.set(groupName, new Map());
+  }
+
+  return groups.get(groupName)!;
+}
+
+function ensureRow(group: Map<string, TableRow>, team: TeamRef) {
+  if (team.placeholder) return undefined;
+
+  if (!group.has(team.id)) {
+    group.set(team.id, createRow(team));
+  }
+
+  return group.get(team.id)!;
+}
+
 export function calculateGroupTables(
   matches: readonly Match[],
 ): Record<string, TableRow[]> {
   const groups = new Map<string, Map<string, TableRow>>();
 
   for (const match of matches) {
-    if (
-      match.stage !== 'group' ||
-      match.status !== 'finished' ||
-      !match.group ||
-      !isValidScore(match.homeScore) ||
-      !isValidScore(match.awayScore)
-    ) {
+    if (match.stage !== 'group' || !match.group) {
       continue;
     }
 
-    if (!groups.has(match.group)) {
-      groups.set(match.group, new Map());
+    const group = ensureGroup(groups, match.group);
+    const homeRow = ensureRow(group, match.homeTeam);
+    const awayRow = ensureRow(group, match.awayTeam);
+
+    if (
+      homeRow &&
+      awayRow &&
+      match.status === 'finished' &&
+      isValidScore(match.homeScore) &&
+      isValidScore(match.awayScore)
+    ) {
+      applyResult(homeRow, match.homeScore, match.awayScore);
+      applyResult(awayRow, match.awayScore, match.homeScore);
     }
-
-    const group = groups.get(match.group)!;
-
-    if (!group.has(match.homeTeam.id)) {
-      group.set(match.homeTeam.id, createRow(match.homeTeam));
-    }
-
-    if (!group.has(match.awayTeam.id)) {
-      group.set(match.awayTeam.id, createRow(match.awayTeam));
-    }
-
-    applyResult(group.get(match.homeTeam.id)!, match.homeScore, match.awayScore);
-    applyResult(group.get(match.awayTeam.id)!, match.awayScore, match.homeScore);
   }
 
   return Object.fromEntries(

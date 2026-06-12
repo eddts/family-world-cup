@@ -113,6 +113,24 @@ describe('useTournamentData', () => {
     expect(result.current.matches).toHaveLength(fallbackCount);
   });
 
+  it('keeps fallback data when ESPN returns an empty normalized scoreboard', async () => {
+    const response = deferred<Response>();
+    const fetchMock = vi.fn((_: RequestInfo | URL, __?: RequestInit) => response.promise);
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTournamentData());
+    const fallbackCount = result.current.matches.length;
+
+    await act(async () => {
+      response.resolve(makeResponse({ events: [] }));
+    });
+
+    await waitFor(() => expect(result.current.state.loading).toBe(false));
+    expect(result.current.state.source).toBe('fallback');
+    expect(result.current.state.error).toBe('ESPN returned no matches');
+    expect(result.current.matches).toHaveLength(fallbackCount);
+  });
+
   it('ignores stale refreshes that resolve after a newer refresh', async () => {
     const first = deferred<Response>();
     const second = deferred<Response>();

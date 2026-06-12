@@ -76,7 +76,7 @@ describe('calculateGroupTables', () => {
     ]);
   });
 
-  it('ignores scheduled matches and knockout matches', () => {
+  it('includes scheduled group teams with zero stats and ignores knockout matches', () => {
     const mexico = team('Mexico', 'Nicky');
     const canada = team('Canada', 'Granny');
 
@@ -102,7 +102,32 @@ describe('calculateGroupTables', () => {
       },
     ]);
 
-    expect(tables).toEqual({});
+    expect(tables).toEqual({
+      A: [
+        expect.objectContaining({
+          team: canada,
+          played: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
+          goalsFor: 0,
+          goalsAgainst: 0,
+          goalDifference: 0,
+          points: 0,
+        }),
+        expect.objectContaining({
+          team: mexico,
+          played: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
+          goalsFor: 0,
+          goalsAgainst: 0,
+          goalDifference: 0,
+          points: 0,
+        }),
+      ],
+    });
   });
 
   it('ignores finished group matches with invalid score values', () => {
@@ -116,7 +141,8 @@ describe('calculateGroupTables', () => {
       groupMatch('decimal', mexico, canada, 1, 1.5),
     ]);
 
-    expect(tables).toEqual({});
+    expect(tables.A.map((row) => row.team.name)).toEqual(['Canada', 'Mexico']);
+    expect(tables.A.every((row) => row.played === 0 && row.points === 0)).toBe(true);
   });
 
   it('orders tied teams by goal difference', () => {
