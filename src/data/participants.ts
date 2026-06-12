@@ -1,0 +1,55 @@
+export type ParticipantAssignment = {
+  person: string;
+  teams: readonly [string, string];
+};
+
+export const participantAssignments: readonly ParticipantAssignment[] = [
+  { person: 'Leo', teams: ['Tunisia', 'Morocco'] },
+  { person: 'Florence', teams: ['Algeria', 'Turkey'] },
+  { person: 'William', teams: ['Ivory Coast', 'Germany'] },
+  { person: 'Charlie', teams: ['South Africa', 'United States'] },
+  { person: 'Baggins', teams: ['Haiti', 'Australia'] },
+  { person: 'Bruno', teams: ['Iraq', 'Japan'] },
+  { person: 'Gabriel', teams: ['Scotland', 'Spain'] },
+  { person: 'Amelie', teams: ['Jordan', 'Netherlands'] },
+  { person: 'Theo', teams: ['Uzbekistan', 'Argentina'] },
+  { person: 'Poppy', teams: ['Sweden', 'Brazil'] },
+  { person: 'Ollie', teams: ['Ghana', 'France'] },
+  { person: 'Penny', teams: ['Paraguay', 'Iran'] },
+  { person: 'Edd', teams: ['Bosnia-Herzegovina', 'England'] },
+  { person: 'Sarah', teams: ['Congo', 'Uruguay'] },
+  { person: 'Mills', teams: ['Cape Verde', 'Portugal'] },
+  { person: 'Michael', teams: ['Norway', 'Ecuador'] },
+  { person: 'Ant', teams: ['Czech Republic', 'South Korea'] },
+  { person: 'Nicky', teams: ['Saudi Arabia', 'Mexico'] },
+  { person: 'Paul', teams: ['New Zealand', 'Croatia'] },
+  { person: 'Jane', teams: ['Egypt', 'Senegal'] },
+  { person: 'Nanny', teams: ['Curacao', 'Colombia'] },
+  { person: 'Granny', teams: ['Canada', 'Austria'] },
+  { person: 'Grandad', teams: ['Panama', 'Switzerland'] },
+  { person: 'Lemon', teams: ['Belgium', 'Qatar'] },
+];
+
+export const teamAliases: Record<string, string> = {
+  'bosnia and herzegovina': 'Bosnia-Herzegovina',
+  'bosnia herzegovina': 'Bosnia-Herzegovina',
+  'bosnia herzogovina': 'Bosnia-Herzegovina',
+  'bosnia and herzogovina': 'Bosnia-Herzegovina',
+  'cape verde islands': 'Cape Verde',
+  'cabo verde': 'Cape Verde',
+  'columbia': 'Colombia',
+  'curacao': 'Curacao',
+  'czechia': 'Czech Republic',
+  'cote d ivoire': 'Ivory Coast',
+  'cote divoire': 'Ivory Coast',
+  'dr congo': 'Congo',
+  'congo dr': 'Congo',
+  'democratic republic of congo': 'Congo',
+  'iran islamic republic': 'Iran',
+  'ir iran': 'Iran',
+  'korea republic': 'South Korea',
+  'south korea': 'South Korea',
+  'turkiye': 'Turkey',
+  'usa': 'United States',
+  'united states of america': 'United States',
+};
