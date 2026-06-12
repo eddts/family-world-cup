@@ -19,7 +19,7 @@ export function OwnerTag({ owner, className, size = 'default' }: OwnerTagProps) 
       )}
       title={label}
     >
-      <span className="truncate">{label}</span>
+      <span className="text-center [overflow-wrap:anywhere]">{label}</span>
     </span>
   );
 }

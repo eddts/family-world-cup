@@ -83,8 +83,12 @@ export function NextMatchHero({ match, className }: NextMatchHeroProps) {
       </div>
 
       <div className="mt-8 grid gap-3 border-t-4 border-ink pt-4 text-sm font-black uppercase sm:grid-cols-2">
-        <p className="min-w-0 truncate">{match.venue || 'Venue TBC'}</p>
-        <p className="min-w-0 truncate sm:text-right">{formatKickoff(match.kickoff)}</p>
+        <p className="min-w-0 break-words [overflow-wrap:anywhere]">
+          {match.venue || 'Venue TBC'}
+        </p>
+        <p className="min-w-0 break-words [overflow-wrap:anywhere] sm:text-right">
+          {formatKickoff(match.kickoff)}
+        </p>
       </div>
     </section>
   );

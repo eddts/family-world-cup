@@ -26,6 +26,19 @@ function formatGoalDifference(value: number) {
   return value > 0 ? `+${value}` : String(value);
 }
 
+function getRowStats(row: TableRow) {
+  return [
+    ['P', row.played],
+    ['W', row.won],
+    ['D', row.drawn],
+    ['L', row.lost],
+    ['GF', row.goalsFor],
+    ['GA', row.goalsAgainst],
+    ['GD', formatGoalDifference(row.goalDifference)],
+    ['Pts', row.points],
+  ] as const;
+}
+
 export function GroupTable({ group, rows, className }: GroupTableProps) {
   return (
     <section
@@ -41,7 +54,57 @@ export function GroupTable({ group, rows, className }: GroupTableProps) {
         </span>
       </div>
 
-      <div className="overflow-x-auto">
+      <div data-testid="group-table-mobile" className="sm:hidden">
+        {rows.map((row) => (
+          <article key={row.team.id} className="border-t-4 border-ink p-3">
+            <div className="flex flex-col gap-3">
+              <div className="flex min-w-0 items-start gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden border-2 border-ink bg-paper">
+                  {row.team.logo ? (
+                    <img
+                      src={row.team.logo}
+                      alt=""
+                      className="h-full w-full object-contain p-1"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className="px-1 text-center font-display text-sm uppercase leading-none">
+                      {getInitials(row.team) || '?'}
+                    </span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3
+                    className="break-words font-display text-2xl uppercase leading-none [overflow-wrap:anywhere]"
+                    title={row.team.name}
+                  >
+                    {row.team.name}
+                  </h3>
+                  <OwnerTag owner={row.team.owner} className="mt-2" />
+                </div>
+              </div>
+
+              <dl className="grid grid-cols-4 gap-2">
+                {getRowStats(row).map(([label, value]) => (
+                  <div
+                    key={label}
+                    className="border-2 border-ink bg-paper px-2 py-2 text-center"
+                  >
+                    <dt className="font-display text-xs uppercase leading-none text-ink/70">
+                      {label}
+                    </dt>
+                    <dd className="mt-1 font-display text-xl uppercase leading-none">
+                      {value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div data-testid="group-table-desktop" className="hidden overflow-x-auto sm:block">
         <table className="w-full min-w-[760px] border-collapse text-left">
           <thead className="bg-ink text-paper">
             <tr>

@@ -39,7 +39,7 @@ export function TeamBadge({
   return (
     <div
       className={cn(
-        'flex min-w-0 items-center gap-3',
+        'flex min-w-0 max-w-full items-center gap-3',
         isRightAligned && 'flex-row-reverse text-right',
         className,
       )}
@@ -72,7 +72,7 @@ export function TeamBadge({
       >
         <span
           className={cn(
-            'max-w-full truncate font-display text-xl uppercase leading-none text-ink',
+            'max-w-full break-words font-display text-xl uppercase leading-none text-ink [overflow-wrap:anywhere]',
             nameClassName,
           )}
           title={team.name}

@@ -69,17 +69,20 @@ export function MatchCard({ match, className, emphasis = 'standard' }: MatchCard
         </span>
       </div>
 
-      <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 sm:gap-4">
-        <TeamBadge team={match.homeTeam} />
+      <div
+        data-testid="match-card-teams"
+        className="mt-4 grid grid-cols-1 items-center gap-4 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]"
+      >
+        <TeamBadge team={match.homeTeam} className="w-full" />
         <div
           className={cn(
-            'border-4 border-ink text-center font-display uppercase leading-none shadow-hardSm',
+            'justify-self-center border-4 border-ink text-center font-display uppercase leading-none shadow-hardSm',
             getScoreClasses(emphasis),
           )}
         >
           {getMatchScore(match)}
         </div>
-        <TeamBadge team={match.awayTeam} align="right" />
+        <TeamBadge team={match.awayTeam} align="right" className="w-full" />
       </div>
 
       <p className="mt-4 border-t-4 border-ink pt-3 text-sm font-black uppercase text-ink">
