@@ -41,8 +41,11 @@ describe('normalizeEspnScoreboard', () => {
     expect(final.stage).toBe('final');
     expect(final.status).toBe('scheduled');
     expect(final.homeScore).toBeUndefined();
+    expect(final.awayScore).toBeUndefined();
     expect(final.homeTeam.placeholder).toBe(true);
     expect(final.homeTeam.owner).toBeUndefined();
+    expect(final.awayTeam.placeholder).toBe(true);
+    expect(final.awayTeam.owner).toBeUndefined();
   });
 
   it('uses the full tournament date range endpoint', () => {
